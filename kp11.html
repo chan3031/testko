@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>మన కొలికపూడి -- మన తిరువూరు</title> 
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      background: #fffbea;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(90deg, #FFD700, #FFC107);
+      color: #222;
+      padding: 1.2em 0;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      text-shadow: 1px 1px 2px rgba(255,255,255,0.6);
+    }
+    header h1 span { font-size: 1.4em; }
+
+    nav { margin-top: 0.8em; }
+    nav a {
+      color: #222;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 6px 10px;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 3px;
+      background: #ffeb3b;
+      left: 0;
+      bottom: -5px;
+      transition: width 0.3s ease;
+    }
+    nav a:hover { color: #000; }
+    nav a:hover::after { width: 100%; }
+
+    /* Slideshow Banner */
+    .slideshow-container {
+      position: relative;
+      max-width: 100%;
+      height: 350px;
+      overflow: hidden;
+      background: #fff3cd;
+      margin: 0;
+    }
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    .slide.active { opacity: 1; }
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.85);
+    }
+
+    /* Slide Text with Animation */
+    .slide-text {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(30px);
+      background: rgba(255, 215, 0, 0.85);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #222;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+      opacity: 0;
+      transition: all 0.8s ease;
+    }
+    .slide.active .slide-text {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Arrows */
+    .prev, .next {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      padding: 10px;
+      margin-top: -20px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 20px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.4);
+      user-select: none;
+      transition: background 0.3s;
+    }
+    .prev:hover, .next:hover { background: rgba(0,0,0,0.7); }
+    .prev { left: 15px; }
+    .next { right: 15px; }
+
+    /* Dots */
+    .dots {
+      text-align: center;
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+    }
+    .dot {
+      cursor: pointer;
+      height: 12px;
+      width: 12px;
+      margin: 0 5px;
+      background-color: #bbb;
+      border-radius: 50%;
+      display: inline-block;
+      transition: background-color 0.3s;
+    }
+    .dot.active { background-color: #FFD700; }
+
+    section {
+      padding: 3em 2em;
+      max-width: 900px;
+      margin: 2em auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: all 0.8s ease;
+    }
+    section:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    section h2 { color: #d4a017; margin-bottom: 1em; }
+    section img {
+      max-width: 100%;
+      height: auto;
+      margin: 1em 0;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    section img:hover { transform: scale(1.05); box-shadow: 0 8px 16px rgba(0,0,0,0.25); }
+
+    footer {
+      background: linear-gradient(90deg, #FFC107, #FFD700);
+      color: #222;
+      text-align: center;
+      padding: 1.2em 0;
+      margin-top: 2em;
+      font-weight: bold;
+      box-shadow: 0 -4px 8px rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      font-size: 1em;
+    }
+    footer span { font-size: 1.3em; }
+
+    /* Back to Top Button */
+    #backToTop {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: none;
+      background: #FFD700;
+      color: #222;
+      border: none;
+      padding: 12px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: background 0.3s, transform 0.3s;
+      z-index: 1001;
+    }
+    #backToTop:hover { background: #FFC107; transform: scale(1.15) rotate(-10deg); }
+
+    /* 📱 Responsive Styles */
+    @media (max-width: 768px) {
+      header h1 { font-size: 1.6em; }
+      nav a { margin: 0 6px; font-size: 0.9em; }
+      .slideshow-container { height: 250px; }
+      .slide-text { font-size: 1em; padding: 8px 16px; bottom: 15px; }
+      section { padding: 2em 1em; }
+    }
+
+    @media (max-width: 480px) {
+      header h1 { font-size: 1.3em; gap: 6px; }
+      nav a { display: inline-block; margin: 0 5px; font-size: 0.85em; }
+      .slideshow-container { height: 200px; }
+      .slide-text { font-size: 0.9em; padding: 6px 12px; bottom: 12px; }
+      .prev, .next { font-size: 16px; padding: 8px; }
+      section h2 { font-size: 1.2em; }
+      footer { flex-direction: column; font-size: 0.9em; padding: 1em; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1><span>🚲</span> కొలికపూడి శ్రీనివాసరావు MLA
+</h1>
+    <nav>
+      <a href="#about">సమాచారం</a>
+      <a href="#services">సేవలు</a>
+      <a href="#contact">సంప్రదించండి</a>
+    </nav>
+  </header>
+
+  <!-- Slideshow Banner -->
+  <div class="slideshow-container" id="slideshow">
+    <div class="slide active">
+      <img src="https://vcontact-cms.s3.ap-southeast-1.amazonaws.com/testk/scroll1.jpeg" alt="TDP Image 1">
+      <div class="slide-text">🚲 బలమైన నాయకత్వం, ఉజ్వల భవిష్యత్తు</div>
+    </div>
+    <div class="slide">
+      <img src="https://vcontact-cms.s3.ap-southeast-1.amazonaws.com/testk/scroll4.jpeg" alt="TDP Image 2">
+      <div class="slide-text">🌟 యువత & రైతులను శక్తివంతం చేయడం</div>
+    </div>
+    <div class="slide">
+      <img src="https://vcontact-cms.s3.ap-southeast-1.amazonaws.com/testk/scroll3.jpeg" alt="TDP Image 3">
+      <div class="slide-text">💛 జై టీడీపీ - జై CBN- జై KSR</div>
+    </div>
+
+    <!-- Arrows -->
+    <a class="prev">&#10094;</a>
+    <a class="next">&#10095;</a>
+
+    <!-- Dots -->
+    <div class="dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </div>
+
+  <section id="about">
+    <h2>సమాచారం</h2>
+    <img src="https://vcontact-cms.s3.ap-southeast-1.amazonaws.com/testk/about.jpeg" alt="About section image">
+    <p>కొలికపూడి శ్రీనివాసరావు (జననం 1969) ఒక భారతీయ రాజకీయ నాయకుడు మరియు ఆంధ్రప్రదేశ్ రాష్ట్రంలోని తిరువూరు అసెంబ్లీ నియోజకవర్గం [1] శాసనసభ సభ్యుడు (ఎమ్మెల్యే). [2] ఆయన తెలుగుదేశం పార్టీ సభ్యుడు.[3] ఆయన అమరావతి జాయింట్ యాక్షన్ కమిటీకి మాజీ కన్వీనర్.</p>
+  </section>
+
+  <section id="services">
+    <h2>సేవలు</h2>
+    <img src="https://vcontact-cms.s3.ap-southeast-1.amazonaws.com/testk/services.jpeg" alt="Services section image">
+    <p>విద్యార్థులకు ల్యాప్‌టాప్ పంపిణీ మొదలైనవి.</p>
+  </section>
+
+  <section id="contact">
+    <h2>సంప్రదించండి</h2>
+    <img src="https://vcontact-cms.s3.ap-southeast-1.amazonaws.com/testk/servicesk.jpeg" alt="Contact section image">
+    <p>Email: example@example.com</p>
+    <p>Phone: +1 234 567 890</p>
+  </section>
+
+  <footer>
+    <span>🚲</span>
+    <p>&copy; 2025 Telugu Desam Party | Jai Kolikapudi</p>
+  </footer>
+
+  <!-- Back to Top Button with Cycle Icon -->
+  <button id="backToTop">🚲</button>
+
+  <script>
+    // Reveal sections on scroll
+    const sections = document.querySelectorAll("section");
+    const revealOnScroll = () => {
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 100) {
+          section.classList.add("visible");
+        }
+      });
+    };
+    window.addEventListener("scroll", revealOnScroll);
+    window.addEventListener("load", revealOnScroll);
+
+    // Back to Top Button
+    const backToTopBtn = document.getElementById("backToTop");
+    window.addEventListener("scroll", () => {
+      backToTopBtn.style.display = window.scrollY > 300 ? "block" : "none";
+    });
+    backToTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // Slideshow Logic with pause on hover
+    let slideIndex = 0;
+    const slides = document.querySelectorAll(".slide");
+    const dots = document.querySelectorAll(".dot");
+    const slideshow = document.getElementById("slideshow");
+    let slideInterval;
+
+    function showSlide(n) {
+      slides.forEach((slide, i) => {
+        slide.classList.remove("active");
+        dots[i].classList.remove("active");
+      });
+      slides[n].classList.add("active");
+      dots[n].classList.add("active");
+      slideIndex = n;
+    }
+
+    function nextSlide() { showSlide((slideIndex + 1) % slides.length); }
+    function prevSlide() { showSlide((slideIndex - 1 + slides.length) % slides.length); }
+
+    document.querySelector(".next").addEventListener("click", nextSlide);
+    document.querySelector(".prev").addEventListener("click", prevSlide);
+    dots.forEach((dot, i) => dot.addEventListener("click", () => showSlide(i)));
+
+    function startSlideshow() { slideInterval = setInterval(nextSlide, 5000); }
+    function stopSlideshow() { clearInterval(slideInterval); }
+
+    startSlideshow();
+
+    // Pause on hover
+    slideshow.addEventListener("mouseenter", stopSlideshow);
+    slideshow.addEventListener("mouseleave", startSlideshow);
+  </script>
+<!-- Floating WhatsApp Button -->
+<a href="https://wa.me/919876543210" target="_blank" id="whatsappBtn" title="Chat on WhatsApp">
+  💬
+</a>
+
+<style>
+  /* WhatsApp Floating Button */
+  #whatsappBtn {
+    position: fixed;
+    bottom: 80px;   /* stays above back-to-top button */
+    right: 20px;
+    background: #25D366;
+    color: white;
+    font-size: 26px;
+    padding: 14px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+    text-decoration: none;
+    z-index: 1002;
+    transition: transform 0.3s, background 0.3s;
+  }
+  #whatsappBtn:hover {
+    background: #1ebe5d;
+    transform: scale(1.1) rotate(-5deg);
+  }
+</style>
+<!-- Floating Call Now Button -->
+<a href="tel:+919876543210" id="callBtn" title="Call Now">📞</a>
+
+<style>
+  /* Call Floating Button */
+  #callBtn {
+    position: fixed;
+    bottom: 140px;  /* above WhatsApp & back-to-top */
+    right: 20px;
+    background: #FFD700;
+    color: #222;
+    font-size: 24px;
+    padding: 14px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+    text-decoration: none;
+    z-index: 1002;
+    transition: transform 0.3s, background 0.3s;
+  }
+  #callBtn:hover {
+    background: #FFC107;
+    transform: scale(1.1) rotate(-5deg);
+  }
+</style>
+  
+  
+</body>
+</html>
