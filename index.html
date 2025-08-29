@@ -241,6 +241,38 @@
       <a href="#contact">సంప్రదించండి</a>
     </nav>
   </header>
+<!-- Scrolling Text Banner -->
+<div class="scrolling-text">
+  <span>🚲 బ్రేకింగ్ న్యూస్ 🔥🔥🔥
+తిరువూరు నియోజకవర్గ గౌరవ శాసన సభ్యులు శ్రీ కొలికపూడి శ్రీనివాసరావు గారి అధ్వర్యంలో త్వరలో గ్రూప్ 2 ఉచిత కోచింగ్ సెంటర్ ప్రారంభం రిజిస్ట్రేషన్ త్వరలో ప్రారంభం 🚲</span>
+</div>
+
+<style>
+.scrolling-text {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  background: #FFD700;
+  color: #222;
+  font-weight: bold;
+  font-size: 1.2em;
+  padding: 10px 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  position: relative;
+  z-index: 999;
+}
+
+.scrolling-text span {
+  display: inline-block;
+  padding-left: 100%;  /* starts off-screen */
+  animation: scroll-left 15s linear infinite;
+}
+
+@keyframes scroll-left {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+</style>
 
   <!-- Slideshow Banner -->
   <div class="slideshow-container" id="slideshow">
@@ -408,4 +440,5 @@
   
 </body>
 </html>
+
 
